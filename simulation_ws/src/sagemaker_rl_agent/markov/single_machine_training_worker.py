@@ -44,7 +44,7 @@ def should_stop_training_based_on_evaluation():
 class SigTermHandler:
     def __init__(self, data_store):
         self.data_store = data_store
-        # signal.signal(signal.SIGINT, self.sigterm_exit)
+        signal.signal(signal.SIGINT, self.sigterm_exit)
         signal.signal(signal.SIGTERM, self.sigterm_exit)
 
     def sigterm_exit(self, signum, frame):
@@ -109,7 +109,7 @@ def main():
                                                            aws_region=args.aws_region)
     data_store = S3BotoDataStore(data_store_params_instance)
 
-    SigTermHandler(data_store)
+    sigterm_handler = SigTermHandler(data_store)
 
     if args.save_frozen_graph:
         data_store.graph_manager = graph_manager
